@@ -1,0 +1,103 @@
+swagger: "2.0"
+info:
+  description: "Spec"
+  version: "1.0.0"
+  title: "Spec"
+
+schemes:
+- "https"
+parameters:
+  countryCodePathParam:
+    name: countryCode
+    in: path
+    description: The country code of the current client request
+    required: true
+    type: string
+    x-personal-data-class: unclassified
+paths:
+  /v2/{countryCode}/endpointTwo/{id}:
+    get:
+      operationId: getReservation
+      description: |
+        The endpoint will return Bad Request (400) error in case
+        * The deal product is not active and enabled.
+        * The product is expired or sold out.
+      security:
+      - ClientId: []
+        oauth:
+          - users
+      - ClientId: []
+      parameters:
+      - $ref: '#/parameters/countryCodePathParam'
+      - name: id
+        in: path
+        format: uuid
+      - name: queryParam
+        in: query
+        type: integer
+        format: int32
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/EndpointOneResponse'
+
+securityDefinitions:
+  oauth:
+    type: "oauth2"
+    flow: "password"
+    tokenUrl: "url"
+    # this points to the operationId that returns an oauth Token
+    x-operationId: 'AuthenticationAuthenticate'
+    scopes:
+      users: "read/write user data"
+  ClientId:
+    type: "apiKey"
+    name: "client_id"
+    in: "query"
+definitions:
+  EndpointOneResponse:
+    required:
+    - orderId
+    - items
+    properties:
+      orderId:
+        type: integer
+        format: int32
+        minimum: 200
+        maximum: 600
+        x-personal-data-class: unclassified
+        description: orderId, for complete flow of reservation to order creation
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/ItemParam'
+  ItemParam:
+    type: object
+    required:
+      - optionId
+    properties:
+      optionId:
+        type: string
+        format: uuid
+        description: Uuid of reservation
+      reservedGroupons:
+        type: array
+        items:
+          $ref: "#/definitions/ResponseItem"
+        description: If the deal is claimable for free and the price is 0 this will be returned
+  ResponseItem:
+    type: object
+    required:
+      - uuid
+    properties:
+      uuid:
+        type: string
+        format: uuid
+        description: Inventory unit id/uuid
+      id:
+        type: string
+        description: Inventory service grouponCode
+externalDocs:
+  description: "External Docs"
+  url: "https://groupon.com"

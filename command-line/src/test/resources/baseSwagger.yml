@@ -1,0 +1,11 @@
+swagger: "2.0"
+info:
+  description: "Joined Spec description"
+  version: "1.0.0"
+  title: "Joined Spec Title"
+  contact:
+    email: "apidevs@groupon.com"
+host: "api-staging.groupon.com"
+schemes:
+  - http
+  - https

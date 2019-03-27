@@ -1,0 +1,81 @@
+swagger: "2.0"
+info:
+  description: "Spec"
+  version: "1.0.0"
+  title: "Spec"
+
+schemes:
+- "https"
+tags:
+  - name: TagToRemove
+    description: "This will be removed"
+  - name: TagToKeep
+    description: "This will be kept"
+parameters:
+  countryCodePathParam:
+    name: countryCode
+    in: path
+    description: The country code of the current client request
+    required: true
+    type: string
+    x-personal-data-class: unclassified
+paths:
+  /v2/{countryCode}/endpointThree:
+    get:
+      tags:
+        - TagToKeep
+      operationId: getConfig
+      security:
+      - ClientId: []
+      parameters:
+      - $ref: '#/parameters/countryCodePathParam'
+      - name: queryParam
+        in: query
+        type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/EndpointThreeResponse'
+  /v2/{countryCode}/endpointFour:
+    get:
+      tags:
+        - TagToRemove
+      operationId: operation4
+      security:
+      - ClientId: []
+      parameters:
+      - $ref: '#/parameters/countryCodePathParam'
+      - name: queryParam
+        in: query
+        type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/EndpointFourResponse'
+
+securityDefinitions:
+  ClientId:
+    type: "apiKey"
+    name: "client_id"
+    in: "query"
+definitions:
+  EndpointThreeResponse:
+    required:
+    - items
+    properties:
+      someProperty:
+        type: string
+        x-personal-data-class: unclassified
+  EndpointFourResponse:
+    required:
+    - items
+    properties:
+      someProperty:
+        type: string
+        x-personal-data-class: unclassified
+
+externalDocs:
+  description: "External Docs"
+  url: "https://groupon.com"
